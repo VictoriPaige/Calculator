@@ -1,27 +1,123 @@
-import React from "react";
-import {useState} from "react";
+import { useState } from "react";
 
-export default function Calculator(){
+function Calculator() {
+  const [expression, setExpression] = useState({
+    val1: 0,
+    val2: 0,
+    operation: "+",
+    result: 0,
+  });
 
-//const[value1, setvalue1]=useState({})
-//make sure to spread what is inside the object for it to carry out
-    return(
-<div className="container">
-<div className = "wrapper"></div>
-<div className="screen"> </div>
-<h1>Add with React!</h1>
+  function handleChange() {
+    const { name, value } = event.target;
+    setExpression((prevExpression) => ({
+      ...prevExpression,
+      [name]: parseInt(value),
+    }));
+  }
 
+  function handleSubmit() {
+    event.preventDefault();
+    const { val1, val2, operation, result } = expression;
+    switch (operation) {
+      case "+":
+        setExpression((prevExpression) => ({
+          ...prevExpression,
+          result: (val1 + val2).toLocaleString(),
+        }));
+        break;
+      case "-":
+        setExpression((prevExpression) => ({
+          ...prevExpression,
+          result: (val1 - val2).toLocaleString(),
+        }));
+        break;
+      case "x":
+        setExpression((prevExpression) => ({
+          ...prevExpression,
+          result: (val1 * val2).toLocaleString(),
+        }));
+        break;
+      case "/":
+        setExpression((prevExpression) => ({
+          ...prevExpression,
+          result: (val1 / val2).toLocaleString(),
+        }));
+        break;
+    }
+  }
 
+  function changeOperation() {
+    const { val1, val2, operation, result } = expression;
 
-<form className="add"> 
-  <input type="text" name="value1" />
-  <span>+</span>
-  <input type="text" name="value2" />
-  <span>=</span>
-  <h3>Addition results go here!</h3>
-</form>
+    setExpression((prevExpression) => ({
+      ...prevExpression,
+      operation: event.target.value,
+    }));
+  }
 
-</div>
+  console.log(expression);
 
-    )
+  return (
+    <div className="container">
+      <h1>Add with React!</h1>
+
+      <form className="add" onSubmit={handleSubmit}>
+        <div className="math-expression">
+          <input type="text" name="val1" onChange={handleChange} />
+
+          <div className="operation-symbol">{expression.operation}</div>
+
+          <input type="text" name="val2" onChange={handleChange} />
+
+          <span>=</span>
+        </div>
+
+        <div className="operations">
+          <label htmlFor="+">
+            <input
+              type="radio"
+              id="+"
+              value="+"
+              name="operation"
+              onChange={changeOperation}
+            />
+          </label>
+          <label htmlFor="−">
+            <input
+              type="radio"
+              id="−"
+              value="-"
+              name="operation"
+              onChange={changeOperation}
+            />
+          </label>
+          <label htmlFor="⨉">
+            <input
+              type="radio"
+              id="⨉"
+              value="x"
+              name="operation"
+              onChange={changeOperation}
+            />
+          </label>
+          <label htmlFor="÷">
+            <input
+              type="radio"
+              id="÷"
+              value="/"
+              name="operation"
+              onChange={changeOperation}
+            />
+          </label>
+        </div>
+
+        <button>Evaluate</button>
+
+        <h3>{expression.result}</h3>
+      </form>
+    </div>
+  );
 }
+
+export default Calculator;
